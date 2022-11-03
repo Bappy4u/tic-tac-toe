@@ -1,5 +1,5 @@
 
-var socket = io();
+var socket = io("http://127.0.0.1:3000/");
 let warning;
 let topBar = document.querySelector('.turn');
 let btns = document.querySelectorAll('td');
