@@ -1,0 +1,8 @@
+For tic tac toe game:
+
+ * Multiplayer
+	* For realtime connection have to use socket.io
+	* And For server using node.js and express.js
+
+
+ * Can detect the winner

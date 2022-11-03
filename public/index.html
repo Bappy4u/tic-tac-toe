@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <!-- <link rel="stylesheet" href="tic.css"> -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
+    <link rel="stylesheet" href="style.css">
+    
+  </head>
+  <body>
+    <h2>Tic tac toe Game</h2>
+    <div class="turn"></div>
+    <div class="tic">
+      
+      <table>
+        
+        <tr>
+          <td id="0-0"></td>
+          <td id="0-1"></td>
+          <td id="0-2"></td>
+          
+        </tr>
+        <tr>
+          <td id="1-0"></td>
+          <td id="1-1"></td>
+          <td id="1-2"></td>
+          
+        </tr>
+        <tr>
+          <td id="2-0"></td>
+          <td id="2-1"></td>
+          <td id="2-2"></td>
+          
+        </tr>
+      </table>
+
+      <!-- <div class="play-board">
+        <div class="details">
+            <div class="players">
+                <span class="Xturn">X's Turn</span>
+                <span class="Oturn">O's Turn</span>
+                <div class="slider"></div>
+            </div>
+        </div>
+        <div class="play-area"></div>
+    </div> -->
+    </div>
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
