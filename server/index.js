@@ -1,76 +1,100 @@
 const express = require('express');
 const app = express();
-const http = require('http');
-const server = http.createServer(app);
-const port = 3000;
+
+const port = 8081;
 const socket = require('socket.io');
+const webSocket = require('ws');
 const Game_Manager = require('./game-manager');
 
-let gameManager = new Game_Manager(3);
+const path = require('path');
+const homePage = 'D:\\Assignment\\tic tac\\tic-tac-frontend\\index.html';
+const fs = require('fs-extra');
+initServer(homePage);
 
-const io = socket(server);
+async function initServer(homepage){
 
-app.use(express.static('public'));
+    const websocketServer = new webSocket.Server({noServer: true });
+    const server = app.listen(port);
 
+    server.on('upgrade', (request, socket, head) => {
+        websocketServer.handleUpgrade(request, socket, head, socket => {
+            websocketServer.emit('connection', socket, request);
+        })
+    })
 
-// sendFile will go here
-app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/index.html');
-});
+    websocketServer.on('connection', socket => {
 
-
-let isFinished = false;
-
-
-io.on('connection', (socket) => {
-
-
-    gameManager.addPlayers(socket.id);
-
-    if (gameManager.getPlayerCount() === 2) {
-
-        let state = gameManager.getCurrentGame();
-        socket.emit('state', state.ar);
-
-        const playerIndex = gameManager.getCurrentPlayer();
-        const players = gameManager.getPlayers();
-        io.emit('turn', players[playerIndex]);
-    } else if (gameManager.playerCount == 1) {
-        io.emit("wait", "Please wait for the opponent!");
-
-    }
-
-    socket.on('click', (msg) => {
-
-        const clickedBox = gameManager.click(socket.id, msg);
-
-        if(clickedBox.clicked){
-            io.emit('click', {id: msg.id, user: clickedBox.playerSign});
+        socket.onmessage = (event) => {
+            const eventData = JSON.parse(event.data);
+            socket.send(eventData.name);
         }
-
-        if (gameManager.getWinner() != -1) {
-            isFinished = true;
-            io.emit("winner", [gameManager.getWinner(), socket.id]);
-        } else if (gameManager.isDraw()) {
-            isFinished = true;
-            io.emit('draw', "Match drawn");
-        }
-
-
+    })
+    app.use(express.static('D:\\Assignment\\tic tac\\tic-tac-frontend\\'));
+    app.get('/', (request, response) => {
+        response.sendFile(homepage);
     });
-
-    socket.on('disconnect', () => {
-        gameManager.removePlayer(socket.id);
-        const playerCount = gameManager.getPlayerCount();
-
-        if(playerCount<2){
-            io.emit("wait", "Please wait for the opponent!");
-        }
-    });
-
-})
+}
 
 
-server.listen(port, () => {
-    console.log('example app listening on port', port);
-})
+//
+//
+// let gameManager = new Game_Manager(3);
+//
+// const io = socket(server);
+//
+//
+// let isFinished = false;
+//
+//
+// io.on('connection', (socket) => {
+//
+//
+//     gameManager.addPlayers(socket.id);
+//
+//     if (gameManager.getPlayerCount() === 2) {
+//
+//         let state = gameManager.getCurrentGame();
+//         socket.emit('state', state.ar);
+//
+//         const playerIndex = gameManager.getCurrentPlayer();
+//         const players = gameManager.getPlayers();
+//         io.emit('turn', players[playerIndex]);
+//     } else if (gameManager.playerCount == 1) {
+//         io.emit("wait", "Please wait for the opponent!");
+//
+//     }
+//
+//     socket.on('click', (msg) => {
+//
+//         const clickedBox = gameManager.click(socket.id, msg);
+//
+//         if(clickedBox.clicked){
+//             io.emit('click', {id: msg.id, user: clickedBox.playerSign});
+//         }
+//
+//         if (gameManager.getWinner() != -1) {
+//             isFinished = true;
+//             io.emit("winner", [gameManager.getWinner(), socket.id]);
+//         } else if (gameManager.isDraw()) {
+//             isFinished = true;
+//             io.emit('draw', "Match drawn");
+//         }
+//
+//
+//     });
+//
+//     socket.on('disconnect', () => {
+//         gameManager.removePlayer(socket.id);
+//         const playerCount = gameManager.getPlayerCount();
+//
+//         if(playerCount<2){
+//             io.emit("wait", "Please wait for the opponent!");
+//         }
+//     });
+//
+// })
+
+
+// server.listen(port, () => {
+//     console.log('example app listening on port', port);
+// })
