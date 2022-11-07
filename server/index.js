@@ -5,14 +5,14 @@ const port = 8081;
 const socket = require('socket.io');
 const webSocket = require('ws');
 const Game_Manager = require('./game-manager');
-
+const GameController = require('./gameController');
 const path = require('path');
 const homePage = 'D:\\Assignment\\tic tac\\tic-tac-frontend\\index.html';
 const fs = require('fs-extra');
 initServer(homePage);
 
 async function initServer(homepage){
-
+    const gameController = new GameController();
     const websocketServer = new webSocket.Server({noServer: true });
     const server = app.listen(port);
 
@@ -26,6 +26,9 @@ async function initServer(homepage){
 
         socket.onmessage = (event) => {
             const eventData = JSON.parse(event.data);
+
+            gameController.manageEvent(eventData);
+
             socket.send(eventData.name);
         }
     })
