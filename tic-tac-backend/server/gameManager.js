@@ -1,6 +1,7 @@
 const TicTacToe = require('./tictac');
+const Player = require('./player');
 
-class Game_Manager {
+class GameManager {
     constructor(boardSize) {
         const _game = new TicTacToe(boardSize);
         this.stack = [_game];
@@ -12,41 +13,64 @@ class Game_Manager {
         this.playerIcons = ['X', 'O'];
     }
 
-    getPlayers(){
+    getPlayers() {
         return this.players;
     }
 
-    getPlayerCount(){
+    getPlayerCount() {
         return this.playerCount;
     }
 
-    addPlayers(playerId) {
-        if(this.playerCount<2){
-            if (this.leftPlayerIndex === 0) {
-                this.players = [playerId].concat(this.players);
-            } else {
-                this.players.push(playerId);
-            }
+    addPlayer(playerInfo) {
+        let player = new Player(playerInfo);
+        this.players.push(player);
+        this.playerCount++;
+        console.log(this.getPlayerCount());
+        if (this.getPlayerCount() == 1) {
+            this.sendMessage('wait', "please wait for the oponent.");
+        } else {
+            this.sendMessage('start', "Game started!");
+        }
+        // if (this.leftPlayerIndex === 0) {
+        //     this.players = [playerInfo].concat(this.players);
+        // } else {
+        //     this.players.push(playerInfo);
+        // }
 
-            this.playerCount++;
-            return true;
+        return true;
+    }
+
+    sendMessage(title, desc) {
+        for (let player of this.getPlayers()) {
+            let message = {
+                title: title,
+                message: desc
+            }
+            player.sendMessage(message);
         }
     }
 
-    removePlayer(playerId){
-        if (this.players.includes(playerId)) {
-            this.playerCount--;
-            this.leftPlayerIndex = this.players.indexOf(playerId);
-            console.log('left player count:' + this.leftPlayerIndex);
-            this.players.splice(this.leftPlayerIndex, 1);
-            if (this.playerCount === 0) {
-                this.leftPlayerIndex = -1;
-
-            }
-
-            return true;
-
+    removePlayer(playerId) {
+        if (this.players[0].getId() === playerId) {
+            this.players.shift();
+        } else {
+            this.players.pop();
         }
+        this.sendMessage('left', "Your opponent left this game");
+        this.playerCount--;
+        // if (this.players.includes(playerId)) {
+        //     this.playerCount--;
+        //     this.leftPlayerIndex = this.players.indexOf(playerId);
+        //     console.log('left player count:' + this.leftPlayerIndex);
+        //     this.players.splice(this.leftPlayerIndex, 1);
+        //     if (this.playerCount === 0) {
+        //         this.leftPlayerIndex = -1;
+        //
+        //     }
+        //
+        //     return true;
+        //
+        // }
     }
 
     getCurrentStep() {
@@ -67,6 +91,7 @@ class Game_Manager {
     }
 
     getCellAt(x, y) {
+        console.log('Get cell at');
         return this.getCurrentGame().getCellAt(x, y);
     }
 
@@ -81,14 +106,17 @@ class Game_Manager {
     isDraw() {
         return this.getCurrentGame().isDraw();
     }
-    click(playerId, msg){
 
-        for (let p in this.players) {
-            if (this.players[p] === playerId) {
+    click(playerId, msg) {
+
+        for (let p = 0; p < this.players.length; p++) {
+            if (this.players[p].getId() === playerId) {
+
                 let playerSign;
-                const str = msg.id.split('-');
+                const str = msg.split('-');
                 const x = parseInt(str[0]);
                 const y = parseInt(str[1]);
+
                 if (this.getCellAt(x, y) !== -1) {
 
                     return;
@@ -101,11 +129,14 @@ class Game_Manager {
                 }
                 // console.log(p, gameManager.getCurrentPlayer());
                 if (p == this.getCurrentPlayer()) {
+
                     this.handleClickOnBoard(x, y);
                     const clickedBox = {
                         clicked: true,
                         playerSign: playerSign,
                     };
+                    let currentState = this.getCurrentGame();
+                    this.sendMessage('state', currentState.ar);
                     return clickedBox;
                 }
                 return;
@@ -130,4 +161,4 @@ class Game_Manager {
 
 }
 
-module.exports = Game_Manager;
+module.exports = GameManager;

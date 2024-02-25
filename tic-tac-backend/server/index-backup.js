@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const port = 3000;
 const path = require('path');
 const socket = require('socket.io');
-const Game_Manager = require('./game-manager');
+const Game_Manager = require('./gameManager');
 
 let gameManager = new Game_Manager(3);
 

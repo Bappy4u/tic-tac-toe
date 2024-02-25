@@ -4,7 +4,7 @@ const app = express();
 const port = 8081;
 const socket = require('socket.io');
 const webSocket = require('ws');
-const Game_Manager = require('./game-manager');
+const Game_Manager = require('./gameManager');
 const GameController = require('./gameController');
 const path = require('path');
 const homePage = 'D:\\Assignment\\tic tac\\tic-tac-frontend\\index.html';
@@ -18,19 +18,35 @@ async function initServer(homepage){
 
     server.on('upgrade', (request, socket, head) => {
         websocketServer.handleUpgrade(request, socket, head, socket => {
+
             websocketServer.emit('connection', socket, request);
         })
     })
 
-    websocketServer.on('connection', socket => {
+    websocketServer.on('connection', (socket, request) => {
+        let userInfo;
+        let id = request.headers['sec-websocket-key'];
+        console.log(id);
 
         socket.onmessage = (event) => {
             const eventData = JSON.parse(event.data);
+            eventData.id = id;
+            eventData.socket = socket;
+            gameController.manageEvent(eventData);
+
+        }
+
+        socket.onclose = (event) =>{
+            eventData = {
+                eventName: 'left-player',
+                playerId: id
+            }
 
             gameController.manageEvent(eventData);
 
-            socket.send(eventData.name);
         }
+
+
     })
     app.use(express.static('D:\\Assignment\\tic tac\\tic-tac-frontend\\'));
     app.get('/', (request, response) => {
@@ -52,7 +68,7 @@ async function initServer(homepage){
 // io.on('connection', (socket) => {
 //
 //
-//     gameManager.addPlayers(socket.id);
+//     gameManager.addPlayer(socket.id);
 //
 //     if (gameManager.getPlayerCount() === 2) {
 //

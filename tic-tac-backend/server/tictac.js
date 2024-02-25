@@ -49,6 +49,7 @@ class TicTacToe {
             } else {
                 this.ar[x][y] = 1;
             }
+            console.log(this.ar);
             this.moveNo++;
             let isWinner = this._checkWinner(this.runningPlayer);
             if (isWinner) {
@@ -58,6 +59,8 @@ class TicTacToe {
             this.runningPlayer = (this.runningPlayer + 1) % 2;
             return true;
         }
+
+
     }
 
     _checkWinner(player) {
@@ -143,8 +146,6 @@ class TicTacToe {
 
 }
 
-function hello(){
-    console.log("hello");
-}
+
 
 module.exports = TicTacToe

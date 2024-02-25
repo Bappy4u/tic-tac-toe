@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <!-- <link rel="stylesheet" href="tic.css"> -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
+
+    <script src="./main.js" type="module" defer></script>
+    <link rel="stylesheet" href="style.css">
+    
+  </head>
+  <body>
+    <h2>Tic tac toe Game</h2>
+    <div class="topbar"></div>
+    <div class="tic hide">
+      <div class="board">
+        <table>
+          
+          <tr>
+            <td id="0-0"></td>
+            <td id="0-1"></td>
+            <td id="0-2"></td>
+            
+          </tr>
+          <tr>
+            <td id="1-0"></td>
+            <td id="1-1"></td>
+            <td id="1-2"></td>
+            
+          </tr>
+          <tr>
+            <td id="2-0"></td>
+            <td id="2-1"></td>
+            <td id="2-2"></td>
+            
+          </tr>
+        </table>
+        
+    </div>
+
+      <!-- <div class="play-board">
+        <div class="details">
+            <div class="players">
+                <span class="Xturn">X's Turn</span>
+                <span class="Oturn">O's Turn</span>
+                <div class="slider"></div>
+            </div>
+        </div>
+        <div class="play-area"></div>
+    </div> -->
+   
+    </div>
+    
+    <div class="entry-form">
+      <form action="">
+        <input type="text" name='nameInput' placeholder="Enter your name" required>
+        <input type="submit">
+      </form>
+    </div>
+    <div class="turn">
+      <div class="message  hide"></div>
+    </div>  
+  </body>
+</html>
